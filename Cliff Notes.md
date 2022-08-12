@@ -1,3 +1,7 @@
+
+
+**WARNING:** This file contains my condensed notes of things I needed to memorize for the test so it probably does not contain everything you need to learn.
+
 - [Kubernetes Documentation](#kubernetes-documentation)
 - [Test Tips](#test-tips)
 - [Environment Setup and kubectl](#environment-setup-and-kubectl)
@@ -28,22 +32,24 @@
 
 - Learn what to search for
 - Use the sub navigation on the right of the main docs to drill down to what you need
+- Search the page for what you need, example `kind: pod`
 
 # Test Tips
 
+- Don't Panic!
 - Use imperative commands to create resources or yaml files
   - `k run pod --help`
   - `k create deployment --help`
   - You can type in part of a command and tack `--help` on at any point to look for the rest of it, then up arrow, delete the `--help` and finish the command.
-    - `k create deployment my-deployment --image --help` (enter)
+    - `k create deployment my-deployment --image=nginx --help` (enter)
     - View help, find the bits you need then (up arrow)
-    - `k create deployment my-deployment --image --replicas=3`
+    - `k create deployment my-deployment --image=nginx --replicas=3`
 - Always check the state of a resource after you create it.  
   - First check if it was created correctly with `k get <resource>`
   - Then check its details with either `k describe <resource>` or `k get <resource> -o yaml`
     - `describe` may have details that the YAML may not, for example Service Endpoints can only be seen with `describe`
     - `-o yaml` may have details that `describe` does not, for example `securityContext` of a pod
-- Learn `vi`/`vim`  
+- Learn `vi`/`vim` or memorize replace the `KUBE_EDITOR` with nano, `export KUBE_EDITOR=nano` 
   - Editing:
     - `insert` key to edit
     - Make changes as normal
@@ -81,7 +87,9 @@ complete -o default -F __start_kubectl k
 
 - Options valid for all kubectl commands can bee seen with `k options`
 - To use a different Kube Config file: `k --kubeconfig=<file-path>`
-- To see all k8s APIs / Resources `k api-resources`
+- To see all k8s APIs / Resources `k api-resources`, learn their short names.
+- When createing resources like Roles with `kubectl create` you CAN use a resources short name, like `pv` instead of `Persistentvolume`   
+Example: `k create role pv-reader --verb=get,list --resource=pv`
 
 ## Default Namespace
 
@@ -89,7 +97,7 @@ This is also in the `kubectl cheat sheet` docs but it's best to memorize it
 
 Set default namespace 
 ```bash
-k config set-context --current --namespace=<insert-namespace-name-here>
+k config set-context --current --namespace=<namespace-name>
 ```
 
 ## Executing Command on Running Pods
@@ -110,10 +118,10 @@ k set image deployment/nginx nginx=nginx:1.9.1
 
 ## Jsonpath
 
-- Jsonpath examples are in the kubectl cheat sheet as well.
+- Jsonpath examples are in the kubectl cheat sheet as well
 - When looking at json output, pipe it to jq to make it easier to read.
 `k get nodes -o json | jq`
-- Use js to list paths:
+- Use jq to list paths:
 `k get nodes -o json | jq -c 'paths'`  
 `k get nodes -o json | jq -c 'paths' | grep -i volumesinuse`
 
@@ -121,8 +129,7 @@ k set image deployment/nginx nginx=nginx:1.9.1
 
 # Etcd Backup
 
-In the docs search for `etcdctl backup` and click on `Operating etcd clusters for Kubernetes` in the right hand navigation look for `Backup up an etcd cluster` --> `Snapshot using etcdctl options`  
-https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#snapshot-using-etcdctl-options
+In the docs search for `etcdctl backup` and click on `Operating etcd clusters for Kubernetes` in the right hand navigation look for `Backing up an etcd cluster` --> [Snapshot using etcdctl options](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#snapshot-using-etcdctl-options)
 
 Look for this command:  
 ```bash
