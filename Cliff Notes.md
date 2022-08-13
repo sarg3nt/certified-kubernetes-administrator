@@ -30,6 +30,8 @@
 
 # Kubernetes Documentation
 
+https://kubernetes.io/docs/home/
+
 - Learn what to search for
 - Use the sub navigation on the right of the main docs to drill down to what you need
 - Search the page for what you need, example `kind: pod`
@@ -49,7 +51,7 @@
   - Then check its details with either `k describe <resource>` or `k get <resource> -o yaml`
     - `describe` may have details that the YAML may not, for example Service Endpoints can only be seen with `describe`
     - `-o yaml` may have details that `describe` does not, for example `securityContext` of a pod
-- Learn `vi`/`vim` or memorize replace the `KUBE_EDITOR` with nano, `export KUBE_EDITOR=nano` 
+- Learn `vi`/`vim` or memorize how to replace the `KUBE_EDITOR` with nano, `export KUBE_EDITOR=nano` 
   - Editing:
     - `insert` key to edit
     - Make changes as normal
