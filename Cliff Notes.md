@@ -335,14 +335,14 @@ spec:
 ## Troubleshooting Commands
 
 ```bash
-# For nslookup
+# nslookup
 k run busybox --image=busybox -- sleep 5000
 k exec busybox -- nslookup <endpoint>>
 # or, this will run the container allow you inside then remove the container when you exit
 k run busybox --image=busybox --rm -it -- sh
 > nmap <endpoint>
 
-# for curl
+# curl
 k run curl --image=alpine/curl -- sleep 5000
 k exec curl -- curl http://<endpoint>
 
@@ -358,11 +358,6 @@ ip link
 ip a
 # find default gateway
 ip route
-
-# CNI bin is
-/opt/cni/bin/
-# CNI config is
-/etc/cni/net.d/
 ```
 
 
@@ -382,3 +377,5 @@ ps -aux | grep kubelet | grep network
 | ----------- | ----------- |
 | PKI Certs | `/etc/kubernetes/pki` |
 | Static Pod manifests | `/etc/kubernetes/manifests` |
+| CNI Bin | `/opt/cni/bin/` |
+| CNI config | `/etc/cni/net.d/` |
