@@ -66,6 +66,10 @@ https://kubernetes.io/docs/home/
 
 # Environment Setup and kubectl
 
+In the docs search for `kubectl cheat sheet` and select [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+
+Everything in this section is in the Kubectl Cheat Sheet
+
 ## Kubectl Editor
 
 First, make sure nano is installed, if so . . .  
@@ -74,8 +78,6 @@ First, make sure nano is installed, if so . . .
 ## kubectl Autocompletion and k Alias
 
 The CKA and CKAD instructions indicate that `k` and autocompletion are already installed.  Leaving instructions here in case they are not
-
-In the docs search for `kubectl cheat sheet` and select [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
 
 First thing in the cheat sheet, I wouldn't bother memorizing this, just know how to get there and what it looks like.
 ```bash
