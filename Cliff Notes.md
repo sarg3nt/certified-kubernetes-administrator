@@ -19,6 +19,7 @@
 - [Volumes](#volumes)
   - [Persistent Volumes](#persistent-volumes)
   - [Persistent Volume Claim](#persistent-volume-claim)
+- [Security Contexts](#security-contexts)
 - [Adding a User, Certificate Signing Requests, Roles](#adding-a-user-certificate-signing-requests-roles)
   - [Roles and Role Bindings](#roles-and-role-bindings)
 - [DNS](#dns)
@@ -161,7 +162,7 @@ and check the `Endpoints:` is populated with the ip of the target pod, if so the
 `--targetPort` is optional and is only needed if it is different from `--port`
 
 ## NodePort
-To expose as a nodePort use `k expose <thing> --type=NodePort`
+To expose as a nodePort use `k expose <thing> --type=NodePort` but you cannot give the nodePort value with `k expose`, it will assign one randomly.  If you need to state a specific port then pipe the YAML to a file and edit it adding `nodePort: <port>` in the `ports:` section.
 
 
 
@@ -226,6 +227,41 @@ Use the right side sub navigation to look for `PersistentVolumeClaims` for the s
 To add a PVC to a pod, look for `Claims As Volumes` in the sub navigation just below `PersistentVolumeClaims`
 
 
+# Security Contexts
+
+Search for `security context` in the docs and click on [Configure a Security Context for a Pod or Container](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+A security context is used to set several security related capabilities including:
+
+-  runAsUser
+-  runAsGroup
+-  fsGroup
+-  allowPrivilegeEscalation
+-  readOnlyRootFilesystem
+-  seccompProfile
+-  seLinuxOptions, i.e. Assign SELinux labels to a Container
+-  capabilities
+   -  add NET_ADMIN, SYS_TIME, etc.
+
+These can be set at the pod or container level and container level settings override pod level.  In the example below the container would have `runAsUser` set to `2000`
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: security-context-demo-2
+spec:
+  securityContext:
+    runAsUser: 1000
+  containers:
+  - name: sec-ctx-demo-2
+    image: gcr.io/google-samples/node-hello:1.0
+    securityContext:
+      runAsUser: 2000
+      allowPrivilegeEscalation: false
+      capabilities:
+        add: ["NET_ADMIN", "SYS_TIME"]
+```
 
 # Adding a User, Certificate Signing Requests, Roles
 
@@ -261,6 +297,7 @@ k auth can-i create pods --as john -n development
 
 # Service Accounts
 ### Memorize this!
+# The --as=system:. . .  is in the docs in the Authorization Overview page
 k auth can-i <verb> <resource> --as=system:serviceaccount:<namespace>:<serviceaccountname> [-n <namespace>]
 k auth can-i get pods --as=system:serviceaccount:development:my-dev-sa -n development
 ```
@@ -340,6 +377,7 @@ k run busybox --image=busybox -- sleep 5000
 k exec busybox -- nslookup <endpoint>>
 # or, this will run the container allow you inside then remove the container when you exit
 k run busybox --image=busybox --rm -it -- sh
+# Inside the running container
 > nmap <endpoint>
 
 # curl
