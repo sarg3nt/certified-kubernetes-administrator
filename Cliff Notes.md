@@ -4,6 +4,12 @@
 
 - [Kubernetes Documentation](#kubernetes-documentation)
 - [Test Tips](#test-tips)
+- [Learn tmux](#learn-tmux)
+  - [Sessions](#sessions)
+  - [Windows](#windows)
+  - [Panes](#panes)
+- [Resources allowed during exam](#resources-allowed-during-exam)
+- [Exam Technical Instructions](#exam-technical-instructions)
 - [Environment Setup and kubectl](#environment-setup-and-kubectl)
   - [Kubectl Editor](#kubectl-editor)
   - [kubectl Autocompletion and k Alias](#kubectl-autocompletion-and-k-alias)
@@ -63,7 +69,73 @@ https://kubernetes.io/docs/home/
     - `:wq` to write and quit
     - `:q!` to quit without saving changes
 
+# Learn tmux
 
+`tmux` is a terminal utility for creating and managing terminal sessions, windows and panes.
+
+[This](https://www.youtube.com/watch?v=Yl7NFenTgIo&ab_channel=HackerSploit) is a great 12 minute video on using `tmux`
+
+## Sessions
+
+`tmux` sessions are incredibly powerful as they manages processes in the background for you.  You can create a `tmux` session and hop out of it and it will remain running, more importatnly if your `ssh` session is killed, you can hop back on and recconect to the `tmux` session and not loose your work.
+
+A `tmux` session has a window status bar at the bottom of the terminal that shows the list of current windows in that session.  These can be renamed.
+
+- Create a new non named session: `tmux`
+- Create a new named session: `tmux new -s <name>`
+- To detach from a tmux session: `ctrl-b d`
+- To view sessions: `tmux ls`
+- To reattach to an existing session: `tmux attach -t <name>` 
+- Rename a session: `tmux rename session -t <target> <new-name>`   
+  Example: `tmux rename session -t 0 git` would name session 0 as git
+- Kill a session: `tmux kill-session -t <name>`
+
+## Windows
+
+Each `tmux` session can have many windows.  The window names are at the bottom of the terminal with an * indicating wwhich one is currently active.  They are initially numbered but can be named as shown below
+
+- Create a new window: `ctrl+b c`
+- Switch to a window: `ctrl+b <name>`  
+  Note: By default windows are numbered unless you name them.
+- Rename a window: `ctrl+b ,` rename window at bottom, press `<enter>`
+- `exit` to close the current window
+
+## Panes
+
+Panes are ways of splitting up a current window into multiple terminal areas.  Panes can be vertically and horizontally split.
+
+- `ctrl+b %` to create a new vertical pane to the right
+- `ctrl+b <-` (left arrow) to move to the left pane and right arrow to the right
+- `ctrl+b "` Create a new horizontal pane downward
+- `exit` to close a pane
+
+
+# Resources allowed during exam
+
+During the exam, candidates may:
+
+- review the Exam content instructions that are presented in the command line terminal
+- review Documents installed by the distribution (i.e. /usr/share and its subdirectories)
+- use the browser within the VM to access documentation  at: 
+https://helm.sh/docs/, https://kubernetes.io/docs/, https://kubernetes.io/blog/ and their subdomains. This includes all available language translations of these pages (e.g. https://kubernetes.io/zh/docs/)
+- use the search function provided on https://kubernetes.io/docs/. However, you may only open search results that have a domain matching the ones specified above.
+
+# Exam Technical Instructions
+
+1. Root privileges can be obtained by running 'sudo −i'.
+1. You must NOT reboot the base node (hostname node-1). Rebooting the base node will NOT restart your exam environment.
+1. Do not stop or tamper with the certerminal process as this will END YOUR EXAM SESSION.
+Do not block incoming ports 8080/tcp, 4505/tcp and 4506/tcp. This includes firewall rules that are found within the distribution's default firewall configuration files as well as interactive firewall commands.
+1. Use Ctrl+Alt+W instead of Ctrl+W.
+5.1 Ctrl+W is a keyboard shortcut that will close the current tab in Google Chrome.
+1. The Terminal (Terminal Emulator Application) is a Linux Terminal; to copy & paste within the Linux Terminal you need to use LINUX shortcuts:
+Copy  = Ctrl+SHIFT+C (inside the terminal)
+Paste = Ctrl+SHIFT+V (inside the terminal)
+OR Use the Right Click Context Menu and select Copy or Paste
+1. For security reasons, the INSERT  key is prohibited within the Remote Desktop. 
+Candidates can Type i to switch into insert mode so that you can start editing the file. 
+Once you're done, press the escape key Esc to get out of insert mode and back to command mode.
+1. Installation of services and applications included in this exam may require modification of system security policies to successfully complete.
 
 # Environment Setup and kubectl
 
