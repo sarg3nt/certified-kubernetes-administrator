@@ -4,20 +4,28 @@
 
 - [Kubernetes Documentation](#kubernetes-documentation)
 - [Test Tips](#test-tips)
-- [Learn tmux](#learn-tmux)
-  - [Sessions](#sessions)
-  - [Windows](#windows)
-  - [Panes](#panes)
-- [Resources allowed during exam](#resources-allowed-during-exam)
+- [Resources Allowed During Exam](#resources-allowed-during-exam)
 - [Exam Technical Instructions](#exam-technical-instructions)
-- [Environment Setup and kubectl](#environment-setup-and-kubectl)
-  - [Kubectl Editor](#kubectl-editor)
-  - [kubectl Autocompletion and k Alias](#kubectl-autocompletion-and-k-alias)
-  - [kubectl](#kubectl)
+- [Environment Setup and `kubectl`](#environment-setup-and-kubectl)
+  - [`Kubectl` Editor](#kubectl-editor)
+  - [`kubectl` Autocompletion and k Alias](#kubectl-autocompletion-and-k-alias)
+  - [Aliases](#aliases)
+  - [`kubectl`](#kubectl)
   - [Default Namespace](#default-namespace)
   - [Executing Command on Running Pods](#executing-command-on-running-pods)
   - [Setting Image of a Running Resource](#setting-image-of-a-running-resource)
   - [Jsonpath](#jsonpath)
+- [`crictl`](#crictl)
+- [Learn `tmux`](#learn-tmux)
+  - [Sessions](#sessions)
+  - [Windows](#windows)
+  - [Panes](#panes)
+    - [Scrolling and Copy Mode](#scrolling-and-copy-mode)
+- [`kubelet`](#kubelet)
+  - [File locations](#file-locations)
+  - [Service Control and Status](#service-control-and-status)
+  - [Troublehhooting `kubelet` Startup](#troublehhooting-kubelet-startup)
+- [Expose Pod Information to Containers](#expose-pod-information-to-containers)
 - [Etcd Backup](#etcd-backup)
 - [Services](#services)
   - [Ports](#ports)
@@ -33,6 +41,8 @@
   - [Network Policy](#network-policy)
   - [Troubleshooting Commands](#troubleshooting-commands)
 - [Processes and Services](#processes-and-services)
+- [Running Commands in a Pod](#running-commands-in-a-pod)
+- [`yq`](#yq)
 - [Paths](#paths)
 
 # Kubernetes Documentation
@@ -46,6 +56,8 @@ https://kubernetes.io/docs/home/
 # Test Tips
 
 - Don't Panic!
+- Check out the [CKA Study Guide](https://www.sharelearn.net/certify/linuxfoundation/cka/#0)
+- Use the `Tasks` page in the k8s docs as a launching point to find what you need
 - Use imperative commands to create resources or yaml files
   - `k run pod --help`
   - `k create deployment --help`
@@ -58,9 +70,9 @@ https://kubernetes.io/docs/home/
   - Then check its details with either `k describe <resource>` or `k get <resource> -o yaml`
     - `describe` may have details that the YAML may not, for example Service Endpoints can only be seen with `describe`
     - `-o yaml` may have details that `describe` does not, for example `securityContext` of a pod
-- Learn `vi`/`vim` or memorize how to replace the `KUBE_EDITOR` with nano, `export KUBE_EDITOR=nano` 
+- Learn `vi`/`vim` or memorize how to replace the `KUBE_EDITOR` with nano, `export KUBE_EDITOR=nano` (careful with using nano, by defalut `<tab>` inserts tabs and can break your YAML)
   - Editing:
-    - `insert` key to edit
+    - `i` key to edit.  In the exam, the `insert` key is disabled, you must use `i` instead
     - Make changes as normal
     - `esc` key to exit to normal mode
   - Normal Mode:  Where you delete lines, save and exit
@@ -69,7 +81,128 @@ https://kubernetes.io/docs/home/
     - `:wq` to write and quit
     - `:q!` to quit without saving changes
 
-# Learn tmux
+
+
+# Resources Allowed During Exam
+
+During the exam, candidates may:
+
+- review the Exam content instructions that are presented in the command line terminal
+- review Documents installed by the distribution (i.e. /usr/share and its subdirectories)
+- use the browser within the VM to access documentation  at: 
+https://helm.sh/docs/, https://kubernetes.io/docs/, https://kubernetes.io/blog/ and their subdomains. This includes all available language translations of these pages (e.g. https://kubernetes.io/zh/docs/)
+- use the search function provided on https://kubernetes.io/docs/. However, you may only open search results that have a domain matching the ones specified above.
+
+# Exam Technical Instructions
+
+1. Root privileges can be obtained by running 'sudo −i'.
+1. You must NOT reboot the base node (hostname node-1). Rebooting the base node will NOT restart your exam environment.
+1. Do not stop or tamper with the certerminal process as this will END YOUR EXAM SESSION.
+Do not block incoming ports 8080/tcp, 4505/tcp and 4506/tcp. This includes firewall rules that are found within the distribution's default firewall configuration files as well as interactive firewall commands.
+1. Use Ctrl+Alt+W instead of Ctrl+W.
+5.1 Ctrl+W is a keyboard shortcut that will close the current tab in Google Chrome.
+1. The Terminal (Terminal Emulator Application) is a Linux Terminal; to copy & paste within the Linux Terminal you need to use LINUX shortcuts:
+Copy  = Ctrl+SHIFT+C (inside the terminal)
+Paste = Ctrl+SHIFT+V (inside the terminal)
+OR Use the Right Click Context Menu and select Copy or Paste
+1. For security reasons, the INSERT  key is prohibited within the Remote Desktop. 
+Candidates can Type i to switch into insert mode so that you can start editing the file. 
+Once you're done, press the escape key Esc to get out of insert mode and back to command mode.
+1. Installation of services and applications included in this exam may require modification of system security policies to successfully complete.
+
+# Environment Setup and `kubectl`
+
+In the docs search for `kubectl cheat sheet` and select [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+
+Everything in this section is in the Kubectl Cheat Sheet
+
+## `Kubectl` Editor
+
+First, make sure nano is installed, if so . . .  
+`export KUBE_EDITOR=nano` 
+
+## `kubectl` Autocompletion and k Alias
+
+The CKA and CKAD instructions indicate that `k` and autocompletion are already installed.  Leaving instructions here in case they are not
+
+First thing in the cheat sheet, I wouldn't bother memorizing this, just know how to get there and what it looks like.
+```bash
+source <(kubectl completion bash) # setup autocomplete in bash into the current shell, bash-completion package should be installed first.
+echo "source <(kubectl completion bash)" >> ~/.bashrc # add autocomplete permanently to your bash shell.
+alias k=kubectl
+complete -o default -F __start_kubectl k
+```
+
+## Aliases
+
+```bash
+export do="--dry-run=client -o yaml" # k create deploy nginx --image=nginx $do
+export now="--force --grace-period 0" # k delete pod nginx $now
+```
+
+## `kubectl`
+
+- Options valid for all kubectl commands can bee seen with `k options`
+- To use a different Kube Config file: `k --kubeconfig=<file-path>`
+- To see all k8s APIs / Resources `k api-resources`, learn their short names.
+- When createing resources like Roles with `kubectl create` you CAN use a resources short name, like `pv` instead of `Persistentvolume`   
+Example: `k create role pv-reader --verb=get,list --resource=pv`
+- Some resource types have "special" `-o` options such as `pods` which adds `-o name` which outputs just the name of the pods
+- Counting number of objects returned, turn off heaers then use word count `wc` with the lines option `-l`  
+  `k get nodes --no-headers | wc -l`
+
+## Default Namespace
+
+This is also in the `kubectl cheat sheet` docs but it's best to memorize it
+
+Set default namespace 
+```bash
+k config set-context --current --namespace=<namespace-name>
+```
+
+Check current namespace
+```bash
+k config view | grep namespace
+```
+
+## Executing Command on Running Pods
+
+Execute a command in a running pod quickly without interactively executing into it
+
+```bash
+k exec mypod -- <command to run>
+k exec mypod -- cat /log/app.log
+```
+
+## Setting Image of a Running Resource
+
+```bash
+k set image <rsource-type>/<resource> <container-name>=<image>
+k set image deployment/nginx nginx=nginx:1.9.1
+```
+
+## Jsonpath
+
+- Jsonpath examples are in the kubectl cheat sheet as well
+- When looking at json output, pipe it to jq to make it easier to read.
+`k get nodes -o json | jq`
+- Use jq to list paths:
+`k get nodes -o json | jq -c 'paths'`  
+`k get nodes -o json | jq -c 'paths' | grep -i volumesinuse`
+
+# `crictl`
+
+The test environment does not have docker installed so you need to know about `crictl`  
+
+The docker cli and `crictl` are very similar but there is a page in the k8s docs that has mappings if you get confused.  Search for `docker to crictl` and click on [Mapping from dockercli to crictl](https://kubernetes.io/docs/reference/tools/map-crictl-dockercli/)
+
+```bash
+# An example of using crictl with ssh to grab output and save it to a text file.
+ssh <target> 'crictl logs <id>' &> /opt/file.txt
+# Note: &> redirects standard error and standard out to the file.
+```
+
+# Learn `tmux`
 
 `tmux` is a terminal utility for creating and managing terminal sessions, windows and panes.
 
@@ -77,9 +210,9 @@ https://kubernetes.io/docs/home/
 
 ## Sessions
 
-`tmux` sessions are incredibly powerful as they manages processes in the background for you.  You can create a `tmux` session and hop out of it and it will remain running, more importatnly if your `ssh` session is killed, you can hop back on and recconect to the `tmux` session and not loose your work.
+`tmux` sessions are incredibly powerful as they manage processes in the background for you.  You can create a `tmux` session and hop out of it and it will remain running, more importatnly if your `ssh` session is killed, you can hop back on and recconect to the `tmux` session and not loose your work.
 
-A `tmux` session has a window status bar at the bottom of the terminal that shows the list of current windows in that session.  These can be renamed.
+A `tmux` session has a window status bar at the bottom of the terminal that shows the list of current windows in that session. Window default names are numeric (0, 1, 2, etc.), these can be renamed, see Windows below.
 
 - Create a new non named session: `tmux`
 - Create a new named session: `tmux new -s <name>`
@@ -109,100 +242,113 @@ Panes are ways of splitting up a current window into multiple terminal areas.  P
 - `ctrl+b "` Create a new horizontal pane downward
 - `exit` to close a pane
 
+### Scrolling and Copy Mode
 
-# Resources allowed during exam
+For some reason unfathonable to me, `tmux` replaces the normal function of the up and down arrows of scrolling the terminal up and down with scrolling command history. 
 
-During the exam, candidates may:
+To scroll up and down in the termial press `ctrl+b [` then you can use your normal navigation keys to scroll around (eg. Up Arrow or PgDn). Press `q` to quit scroll mode.
 
-- review the Exam content instructions that are presented in the command line terminal
-- review Documents installed by the distribution (i.e. /usr/share and its subdirectories)
-- use the browser within the VM to access documentation  at: 
-https://helm.sh/docs/, https://kubernetes.io/docs/, https://kubernetes.io/blog/ and their subdomains. This includes all available language translations of these pages (e.g. https://kubernetes.io/zh/docs/)
-- use the search function provided on https://kubernetes.io/docs/. However, you may only open search results that have a domain matching the ones specified above.
+Alternatively you can press `Ctrl-b PgUp` to go directly into copy mode and scroll one page up 
 
-# Exam Technical Instructions
+# `kubelet`
 
-1. Root privileges can be obtained by running 'sudo −i'.
-1. You must NOT reboot the base node (hostname node-1). Rebooting the base node will NOT restart your exam environment.
-1. Do not stop or tamper with the certerminal process as this will END YOUR EXAM SESSION.
-Do not block incoming ports 8080/tcp, 4505/tcp and 4506/tcp. This includes firewall rules that are found within the distribution's default firewall configuration files as well as interactive firewall commands.
-1. Use Ctrl+Alt+W instead of Ctrl+W.
-5.1 Ctrl+W is a keyboard shortcut that will close the current tab in Google Chrome.
-1. The Terminal (Terminal Emulator Application) is a Linux Terminal; to copy & paste within the Linux Terminal you need to use LINUX shortcuts:
-Copy  = Ctrl+SHIFT+C (inside the terminal)
-Paste = Ctrl+SHIFT+V (inside the terminal)
-OR Use the Right Click Context Menu and select Copy or Paste
-1. For security reasons, the INSERT  key is prohibited within the Remote Desktop. 
-Candidates can Type i to switch into insert mode so that you can start editing the file. 
-Once you're done, press the escape key Esc to get out of insert mode and back to command mode.
-1. Installation of services and applications included in this exam may require modification of system security policies to successfully complete.
+## File locations 
 
-# Environment Setup and kubectl
+- Check kubelet config in:  
+`/etc/kubernetes/kubelet.conf` this file holds how the kubelet will talk to the k8s api  
+`/var/lib/kubelet/config.yaml`
 
-In the docs search for `kubectl cheat sheet` and select [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
-
-Everything in this section is in the Kubectl Cheat Sheet
-
-## Kubectl Editor
-
-First, make sure nano is installed, if so . . .  
-`export KUBE_EDITOR=nano` 
-
-## kubectl Autocompletion and k Alias
-
-The CKA and CKAD instructions indicate that `k` and autocompletion are already installed.  Leaving instructions here in case they are not
-
-First thing in the cheat sheet, I wouldn't bother memorizing this, just know how to get there and what it looks like.
-```bash
-source <(kubectl completion bash) # setup autocomplete in bash into the current shell, bash-completion package should be installed first.
-echo "source <(kubectl completion bash)" >> ~/.bashrc # add autocomplete permanently to your bash shell.
-alias k=kubectl
-complete -o default -F __start_kubectl k
-```
-
-## kubectl 
-
-- Options valid for all kubectl commands can bee seen with `k options`
-- To use a different Kube Config file: `k --kubeconfig=<file-path>`
-- To see all k8s APIs / Resources `k api-resources`, learn their short names.
-- When createing resources like Roles with `kubectl create` you CAN use a resources short name, like `pv` instead of `Persistentvolume`   
-Example: `k create role pv-reader --verb=get,list --resource=pv`
-
-## Default Namespace
-
-This is also in the `kubectl cheat sheet` docs but it's best to memorize it
-
-Set default namespace 
-```bash
-k config set-context --current --namespace=<namespace-name>
-```
-
-## Executing Command on Running Pods
-
-Execute a command in a running pod quickly without interactively executing into it
+## Service Control and Status
 
 ```bash
-k exec mypod -- <command to run>
-k exec mypod -- cat /log/app.log
+# Get kubelet status with 
+systemctl status kubelet
+service kubelet status
+
+# Start 
+systemctl start kubelet
+service kubelet start
+
+# Stop
+systemctl stop kubelet
+service kubelet stop
 ```
 
-## Setting Image of a Running Resource
+## Troublehhooting `kubelet` Startup
 
 ```bash
-k set image <rsource-type>/<resource> <container-name>=<image>
-k set image deployment/nginx nginx=nginx:1.9.1
+# check if kubelet is running
+ps -aux | grep kubelet
+# Should return a kubelet command, it may also return lines that have kubelet as a paramater, don't confuse these with the command itself.
+# Example:
+# root        3985  0.0  0.0 4152604 96500 ?       Ssl  22:06   0:44 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --config=/var/lib/kubelet/config.yaml --network-plugin=cni --pod-infra-container-image=k8s.gcr.io/pause:3.2
+
+# Check if it's configured
+service kubelet status
+# if it is configured you will see a "Drop in:" line that is its configuration file
+# in this case that is /etc/systemd/system/kubelet.service.d/10.kubead.conf
+
+# Try to start it
+service kubelet start
+# Check it
+service kubelet status
+# In the 'Process:" line we see it's trying to start  /usr/local/bin/kubelet
+# So we try to run the program from the command line
+/usr/local/bin/kubelet
+# Bash returns no file or directory, so this is the wrong executable path, let's find the real one
+whereis kubelet
+# or
+which kubelet
+# returns /usr/bin/kubelet
+# In this case, it looks like the kubelet config is wrong so we fix it in its config file which we learned is at /etc/systemd/system/kubelet.service.d/10.kubead.conf from `service kubelet status` "Drop in:" line.
 ```
 
-## Jsonpath
+# Expose Pod Information to Containers
 
-- Jsonpath examples are in the kubectl cheat sheet as well
-- When looking at json output, pipe it to jq to make it easier to read.
-`k get nodes -o json | jq`
-- Use jq to list paths:
-`k get nodes -o json | jq -c 'paths'`  
-`k get nodes -o json | jq -c 'paths' | grep -i volumesinuse`
+In the kubernetes docs, search fo `expose pod information` and click on [Expose Pod Information to Containers Through Environment...](https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/)
 
+This is useful for when you need to get information about your pod or its environment and pass it into that pod.
 
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dapi-envars-fieldref
+spec:
+  containers:
+    - name: test-container
+      image: k8s.gcr.io/busybox
+      command: [ "sh", "-c"]
+      args:
+      - while true; do
+          echo -en '\n';
+          printenv MY_NODE_NAME MY_POD_NAME MY_POD_NAMESPACE;
+          printenv MY_POD_IP MY_POD_SERVICE_ACCOUNT;
+          sleep 10;
+        done;
+      env:
+        - name: MY_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: MY_POD_SERVICE_ACCOUNT
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.serviceAccountName
+  restartPolicy: Never
+```
 
 # Etcd Backup
 
@@ -446,7 +592,7 @@ spec:
 ```bash
 # nslookup
 k run busybox --image=busybox -- sleep 5000
-k exec busybox -- nslookup <endpoint>>
+k exec busybox -- nslookup <endpoint>
 # or, this will run the container allow you inside then remove the container when you exit
 k run busybox --image=busybox --rm -it -- sh
 # Inside the running container
@@ -479,6 +625,46 @@ ip route
 ps -aux | grep kubelet | grep network
 ```
 
+# Running Commands in a Pod
+
+```yaml
+command: ['echo', 'foo']
+# vs  
+command: ['sh', '-c', 'echo foo']
+# Note that when using a subshell with `sh` the main thing you are running should be one string and not broken into array elements
+```
+
+Most of the time you should be able to just state the comands and not call a subshell, however, if you need access to shell variables or shell specific funcitonaltiy then you will need to run a sub shell with `sh`
+
+# `yq`
+
+`yq` is the YAML equvilent to `jq` and is used to parse and sarch YAML files.  Its syntax is quite a bit different from `jq`
+
+See [this](https://martinheinz.dev/blog/51) for more
+
+```bash
+# pretty print a file
+yq eval some.yaml
+
+# basic indexing
+yq eval ".user.addresses" user.yaml # Shows the array in array form
+yq eval ".user.addresses[]" user.yaml # Flattens the array to KVPs (splat)
+yq eval ".user.addresses[1]" user.yaml # Gets the second item in the array
+
+# Select items with a * match
+# Given:
+# user:
+#   orders:
+#   - 4356436
+#   - 4345753
+#   - 2345234
+yq eval '.user.orders[] | select(. == "43*")' user.yaml
+# 4356436
+# 4345753
+
+# Sorting keys
+yq eval 'sortKeys(.user)' user.yaml
+```
 
 
 # Paths
@@ -486,6 +672,12 @@ ps -aux | grep kubelet | grep network
 | Item | Path |
 | ----------- | ----------- |
 | PKI Certs | `/etc/kubernetes/pki` |
-| Static Pod manifests | `/etc/kubernetes/manifests` |
+| Static Pods | `/etc/kubernetes/manifests` |
 | CNI Bin | `/opt/cni/bin/` |
 | CNI config | `/etc/cni/net.d/` |
+| Kubelet to kube-api | `/etc/kubernetes/kubelet.conf`|
+| Kubelet config | `/var/lib/kubelet/config.yaml` |
+| Kubelet Certs | `/var/lib/kubelet/pki/` |
+| kubelet service start | `/etc/systemd/system/kubelet.service.d/10-kubeadm.conf` *|
+
+\* The kubelet service startup command can be found by running `service kubelet status` and looking at the "Drop-In:" line.
