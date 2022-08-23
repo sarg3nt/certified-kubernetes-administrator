@@ -1,6 +1,6 @@
 # Command Memorization
 
-This is a big list of those commands Sarge is currently trying to memorize
+List of commands I am currently memorizing
 
 ## Main Memorization List
 
@@ -18,26 +18,8 @@ nano ~/.nanorc
 set tabsize 2
 set tabstospaces
 
-# crictl
-# Search for "Mapping from dockercli to crictl"
-ssh <target> 'crictl ps'
-ssh <target> 'crictl logs <id>' &> /opt/file.txt
-
 # Kubelet Troubleshooting
 ps -aux | grep kubelet
-service kubelet status
-# Look at Drop-In: line for where startup file is.
-service kubelet start
-which kubelet
-# Explore config files at
-# Kubelet config for talking to kube-api `/etc/kubernetes/kubelet.conf`
-# Kubelet config: `/var/lib/kubelet/config.yaml`
-
-# Logs for a service
-journalctl -u <service-name>
-
-k run busybox --image=busybox --rm -it -- nslookup <endpoint>
-k run curl --image=alpine/curl --rm -it -- curl <endpoint>
 
 # To see what ports are open and how many connections they have open
 netstat -plnt
@@ -46,15 +28,6 @@ ip link # interfaces
 ip a # IP
 ip route # # find default gateway
 ps -aux | grep kubelet | grep network # Find what options a service is running with
-
-## DNS
-# Service FQDN is typically
-<svc>.<namespace>.svc.cluster.local
-my-service.default.svc.cluster.local
-
-# Pod FQDN is typically
-<pod-ip-dashed>.<namespace>.pod.cluster.local
-10-5-2-7.default.pod.cluster.local
 
 ## yq
 yq eval ".user.addresses" user.yaml # Shows the array in array form
@@ -80,6 +53,35 @@ k set image deployment/nginx nginx=nginx:1.9.1
 
 systemctl status kubelet
 service kubelet status
+
+# crictl
+# Search for "Mapping from dockercli to crictl"
+ssh <target> 'crictl ps'
+ssh <target> 'crictl logs <id>' &> /opt/file.txt
+
+service kubelet status
+# Look at Drop-In: line for where startup file is.
+service kubelet start
+which kubelet
+# Explore config files at
+# Kubelet config for talking to kube-api `/etc/kubernetes/kubelet.conf`
+# Kubelet config: `/var/lib/kubelet/config.yaml`
+
+# Logs for a service
+journalctl -u <service-name>
+
+k run busybox --image=busybox --rm -it -- nslookup <endpoint>
+k run curl --image=alpine/curl --rm -it -- curl <endpoint>
+
+## DNS
+# Service FQDN is typically
+<svc>.<namespace>.svc.cluster.local
+my-service.default.svc.cluster.local
+
+# Pod FQDN is typically
+<pod-ip-dashed>.<namespace>.pod.cluster.local
+10-5-2-7.default.pod.cluster.local
+
 ```
 
 ## Paths
