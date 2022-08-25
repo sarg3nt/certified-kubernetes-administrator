@@ -5,24 +5,28 @@ List of commands I am currently memorizing
 ## Main Memorization List
 
 ```bash
+# Add the following to the .bashrc
 export do="--dry-run=client -o yaml" # k create deploy nginx --image=nginx $do
 export now="--force --grace-period 0" # k delete pod nginx $now
+alias kn="kubectl config set-context --current --namespace" # kn default
+alias knc="kubectl config view --minify | grep namespace" # Shows the current namespace
+## nano coonfig
+export KUBE_EDITOR=nano
+# in the file (inccorect commands will be red, correct will turn green)
+echo -e 'set tabsize 2\nset tabstospaces' > ~/.nanorc
+# END OF .bashrc additions
 
 # Show paths in jq
 k get nodes -o json | jq -c 'paths'
-
-## nano coonfig
-export KUBE_EDITOR=nano
-nano ~/.nanorc
-# in the file (inccorect commands will be red, correct will turn green)
-set tabsize 2
-set tabstospaces
 
 # Kubelet Troubleshooting
 ps -aux | grep kubelet
 
 # To see what ports are open and how many connections they have open
 netstat -plnt
+
+# crt / pem checking
+openssl x509  -noout -text -in /var/lib/kubelet/pki/kubelet-client-current.pem | grep "Extended Key Usage" 
 
 ip link # interfaces
 ip a # IP
@@ -34,6 +38,18 @@ yq eval ".user.addresses" user.yaml # Shows the array in array form
 yq eval ".user.addresses[]" user.yaml # Flattens the array to KVPs (splat)
 yq eval ".user.addresses[1]" user.yaml # Gets the second item in the array
 yq eval '.user.orders[] | select(. == "43*")' user.yaml # gets order starting with 43
+
+## etcd restore, stuff in docs is a bit misleading
+# Step 1, move all the static pod yaml out of the manifest folder and wait for the coontainers to stop via crictl
+# Step 2, use etcdctl to restore the snapshot, almost same as saving a snapshot, but with the 
+# location to restore the --data-dir /var/lib/etcd-backup
+ETCDCTL_API=3 etcdctl snapshot restore /tmp/etcd-backup.db \
+--data-dir /var/lib/etcd-backup \
+--cacert /etc/kubernetes/pki/etcd/ca.crt \
+--cert /etc/kubernetes/pki/etcd/server.crt \
+--key /etc/kubernetes/pki/etcd/server.key
+# Step 3, change the etcd.yaml config to point to the new data-dir
+# Step 4, move static pod yaml files back.
 
 ## Search Terms in Kube docs
 # Expose pod information to containers with fieldRef
