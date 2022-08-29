@@ -127,7 +127,7 @@ openssl req -new -key ca.key -subj \
   "/CN=KUBERNETES-CA" -out ca.csr
 # output is ca.csr
 
-# Sign Certificate
+# Sign Certificate using the key we generated in step 1 which is our Certificate Authority key.
 openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt
 # output is ca.crt
 ```
@@ -145,7 +145,7 @@ openssl req -new -key admin.key -subj \
 # output is admin.csr
 # MUST mention system:masters group in test
 
-# Sign Certificate
+# Sign Certificate.  This command is slightly different as it uses the ca.crt AND the ca.key
 openssl x509 -req -in admin.csr –CA ca.crt -CAkey ca.key -out admin.crt
 # output is admin.crt
 ```
@@ -273,15 +273,17 @@ Check the service logs if the component was set up as a service.
 Example: `journalctl -u etcd.service -l`
 
 If set up with kubeadm then check the container logs:  
-`kubectl logs etcd-master`
+`k logs etcd-master`
 
 If the kube-api server is down, then use docker
 
 ### Memorize This
 
-kubeadm stores certs in /etc/kubernetes/pki
+kubeadm stores certs in `/etc/kubernetes/pki`
 
-openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout
+```bash
+openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt
+```
 
 ## Certificate Workflow and API
 
@@ -307,20 +309,29 @@ spec:
   - client auth
   request: LS0tLS1C<redacted>tLQo=
 ```
+There are two sets of commands to work with Certificates and Certificate Signing Requests:  
+```bash
+k <verb> csr
+k get csr
+k delete
+# and
+k certificate approve <csr-name>
+k certificate deny <csr-name>
+```
 
-Requests can be seen by administrators: `kubectl get csr`  
-Approve the request: `kubectl certificate approve jane`  
-View the certificate: `kubectl get csr jane -o yaml` copy base64 data from `status/certificate`  
+Requests can be seen by administrators: `k get csr`  
+Approve the request: `k certificate approve jane`  
+View the certificate: `k get csr jane -o yaml` copy base64 data from `status/certificate`  
 OR  
-`kubectl get csr june -o jsonpath='{.status.certificate}'| base64 -d > june0.crt`
+`k get csr june -o jsonpath='{.status.certificate}'| base64 -d > june0.crt`
 
 The controller managers does the CSR work.
 
 ## KubeConfig
 
 ```bash
-kubectl config view # view the current config file
-kubectl config use-context <context-name> # Switch contexts
+k config view # view the current config file
+k config use-context <context-name> # Switch contexts
 ```  
 
 ```yaml
@@ -342,3 +353,5 @@ users:
     client-certificate: /etc/kubernetes/pki/users/admin.crt
     client-key: /etc/kubernetes/pki/users/admin.key
 ```
+
+View the [Kubernetes View Checker](https://github.com/mmumshad/kubernetes-the-hard-way/tree/master/tools) spreadsheet here.
