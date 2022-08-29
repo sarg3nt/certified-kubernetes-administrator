@@ -287,6 +287,17 @@ openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt
 
 ## Certificate Workflow and API
 
+There are two sets of commands to work with Certificates and Certificate Signing Requests:  
+
+```bash
+k <verb> csr
+k get csr
+k delete
+# and
+k certificate approve <csr-name>
+k certificate deny <csr-name>
+```
+
 When using certificates for cluster access a new user would generate a certificate signing request and send that to the Administrator.   
 ```bash
 openssl genrsa -out jane.key 2048
@@ -308,15 +319,6 @@ spec:
   usages:
   - client auth
   request: LS0tLS1C<redacted>tLQo=
-```
-There are two sets of commands to work with Certificates and Certificate Signing Requests:  
-```bash
-k <verb> csr
-k get csr
-k delete
-# and
-k certificate approve <csr-name>
-k certificate deny <csr-name>
 ```
 
 Requests can be seen by administrators: `k get csr`  
