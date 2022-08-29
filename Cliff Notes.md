@@ -145,8 +145,6 @@ export now="--force --grace-period 0" # k delete pod nginx $now
 - Options valid for all kubectl commands can bee seen with `k options`
 - To use a different Kube Config file: `k --kubeconfig=<file-path>`
 - To see all k8s APIs / Resources `k api-resources`, learn their short names.
-- When createing resources like Roles with `kubectl create` you CAN use a resources short name, like `pv` instead of `Persistentvolume`   
-Example: `k create role pv-reader --verb=get,list --resource=pv`
 - Some resource types have "special" `-o` options such as `pods` which adds `-o name` which outputs just the name of the pods
 - Counting number of objects returned, turn off heaers then use word count `wc` with the lines option `-l`  
   `k get nodes --no-headers | wc -l`
