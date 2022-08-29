@@ -289,7 +289,7 @@ openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt
 
 There are two sets of commands to work with Certificates and Certificate Signing Requests:  
 
-```bash
+```sh
 k <verb> csr
 k get csr
 k delete
