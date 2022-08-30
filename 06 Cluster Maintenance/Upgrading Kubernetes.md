@@ -46,34 +46,41 @@ https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/
 The `kubeadm` tool uses the same versioning as kubernetes.  So if you want to upgrade from kubernetes 1.10 to 1.13 you must first upgrade to 1.12, therefor you must first upgrade kubeadm to 1.12.  
 
 ```bash
-K8S_VERSION_NUMBER="1.12.0-00" # can also be like "1.12.x-00"
-K8S_VERSION_STRING="v1.12.0"
 
 apt update
 
-apt-get install -y --allow-change-held-packages kubeadm="$K8S_VERSION_NUMBER" 
+# Upgrade kubeadm
+apt-get install -y --allow-change-held-packages kubeadm=1.24.0-00
 
-kubeadm upgrade apply "$K8S_VERSION_STRING"
+# Plan
+kubeadm upgrade plan
+
+# Use kubeadm to upgrade the master
+sudo kubeadm upgrade apply v1.24.x
+
+# Drain the node
+kubectl drain <node-to-drain> --ignore-daemonsets
 
 # See note below, you may not have kubelet installed on master nodes.
-apt-get install -y --allow-change-held-packages kubelet="$K8S_VERSION_NUMBER" kubectl="$K8S_VERSION_NUMBER"
-
-systemctl restart kubelet
+# Upgrade kubelet and kubectl
+apt-get install -y --allow-change-held-packages kubelet=1.24.x-00 kubectl=1.24.x-00
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
 ```
 **Note:** Depending on how k8s was installed, you may not have kubelet running on the master node.  If kubeadm or an equivalent was used to install kubernetes then the master node components were installed as pods and thus a kubelet service was installed.  If installed by hand as Linux services then there would not be a kubelet.
 
 ## Worker(s)
 
 ```bash
-K8S_VERSION_NUMBER="1.20.0-00" # can also be like "1.20.x-00"
+apt update
+
+apt-get install -y --allow-change-held-packages kubeadm=1.24.x-00
+
+sudo kubeadm upgrade node
 
 kubectl drain node01 --ignore-daemonsets=true
 
-apt update
-
-apt-get install -y --allow-change-held-packages kubeadm="$K8S_VERSION_NUMBER" 
-
-apt-get install -y --allow-change-held-packages kubelet="$K8S_VERSION_NUMBER" kubectl="$K8S_VERSION_NUMBER"
+apt-get install -y --allow-change-held-packages kubelet=1.24.x-00 kubectl=1.24.x-00
 
 systemctl daemon-reload
 systemctl restart kubelet
