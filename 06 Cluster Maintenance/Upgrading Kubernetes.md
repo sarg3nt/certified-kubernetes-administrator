@@ -41,7 +41,11 @@ https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/
 
 `kubeadm upgrade plan` will produce a lot of great information for an upgrade strategy.  
 
+**Note:** The below instructions are for demonstration purposes only, always use the directions for your version of Kubernetes in the k8s documentation noted above.
+
 ## Upgrading the Master(s)
+
+Check OS version by running `cat /etc/*release*`  
 
 The `kubeadm` tool uses the same versioning as kubernetes.  So if you want to upgrade from kubernetes 1.10 to 1.13 you must first upgrade to 1.12, therefor you must first upgrade kubeadm to 1.12.  
 

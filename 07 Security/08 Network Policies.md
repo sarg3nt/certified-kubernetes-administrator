@@ -2,7 +2,7 @@
 
 By default, k8s ships with an allow all network policy.
 
-Applying the following would block all traffic to the pod matching the selector
+Applying the following would block all ingress and egress traffic to and from the pod matching the selector.  
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -14,6 +14,8 @@ spec:
    matchLabels:
      role: db
 ```
+
+We always look at rules from the perspective of the selector, in this case the `podSelector`.  Doing so will clarify if you need an ingress or egress rule.
 
 To allow traffic from the api-pod we need add more to the above, like so.
 
@@ -38,6 +40,7 @@ spec:
         matchLabels:
           name: api-pod
       # This has no dash, so it is a part of the podSelector rule which then make this an AND operator
+      # This would enforce that only pods from the prod namespace would be allowed access
       namespaceSelector:
         matchLabels:
           # Note: this is a label, not the metaData.Name field.
