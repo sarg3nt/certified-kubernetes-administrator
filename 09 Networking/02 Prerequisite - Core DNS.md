@@ -14,7 +14,7 @@ Now we haven’t specified the IP to hostname mappings. For that you need to pro
 
 ![Configure Core DNS](core-dns-2.png)
 
-And then we configure CoreDNS to use that file. CoreDNS loads it’s configuration from a file named Corefile. Here is a simple configuration that instructs CoreDNS to fetch the IP to hostname mappings from the file `/etc/hosts`. When the DNS server is run, it now picks the Ips and names from the /etc/hosts file on the server.
+And then we configure CoreDNS to use that file. CoreDNS loads its configuration from a file named Corefile. Here is a simple configuration that instructs CoreDNS to fetch the IP to hostname mappings from the file `/etc/hosts`. When the DNS server is run, it now picks the Ips and names from the /etc/hosts file on the server.
 
 CoreDNS also supports other ways of configuring DNS entries through plugins. We will look at the plugin that it uses for Kubernetes in a later section.
 
