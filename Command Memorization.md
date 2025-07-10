@@ -108,7 +108,7 @@ my-service.default.svc.cluster.local
 
 \* The kubelet service startup command can be found by running `service kubelet status` and looking at the "Drop-In:" line.
 
-## `tmux`
+## tmux
 
 ```bash
 # Sessions
