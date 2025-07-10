@@ -1,6 +1,6 @@
 # Command Memorization
 
-List of commands I am currently memorizing
+List of commands to memorize.
 
 ## Main Memorization List
 
@@ -56,13 +56,6 @@ ETCDCTL_API=3 etcdctl snapshot restore /tmp/etcd-backup.db \
 # Volume types are in the "Volumes" docs
 # security context
 
-```
-
-## Refresher
-
-List of commands I moostly have down but should revisit before the test.
-
-```bash
 k config set-context --current --namespace=<namespace-name>
 k config view | grep namespace
 k set image deployment/nginx nginx=nginx:1.9.1

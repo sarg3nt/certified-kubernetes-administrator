@@ -81,8 +81,6 @@ https://kubernetes.io/docs/home/
     - `:wq` to write and quit
     - `:q!` to quit without saving changes
 
-
-
 # Resources Allowed During Exam
 
 During the exam, candidates may:
