@@ -1,6 +1,6 @@
 # Jekyll configuration for GitHub Pages
-title: "Certified Kubernetes Security Specialist Training Notes"
-description: "Training notes for the CKS certification course"
+title: "Certified Kubernetes Administrator Training Notes"
+description: "Training notes for the CKA certification course"
 
 # GitHub Pages uses kramdown by default
 markdown: kramdown
