@@ -1,4 +1,4 @@
-# CKA Training Notes Scope
+# CKA Training Notes
 
 These notes were created by David Sargent when I went through the Udemy course [Certified Kubernetes Administrator (CKA) with Practice Tests](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests) by Mumshad Mannambeth.
 
