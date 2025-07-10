@@ -12,11 +12,11 @@ To specify more than one set of KVPs simply pass `--from-literal=` again.
 From a file:
 
 `kubectl create secret app-secret --from-file=secret-file.properties`  
-The key will be the file name and the value will be the base64 encoded file
+The key will be the file name and the value will be the base64 encoded file.
 
 ## Declaratively
 
-Values in the data field must be base64 encoded, values in the stringData filed do not.  
+Values in the data field must be base64 encoded, values in the stringData field do not.  
 On Linux use base64 to encode values:  
 `echo -n 'root' | base64`   
 Results: `cm9vdA==`  
@@ -35,7 +35,7 @@ stringData:
 
 ## Secrets in Pods
 
-Inject a single env var from a secret
+Inject a single env var from a secret:
 ```yaml
 spec:
   containers:

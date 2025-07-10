@@ -12,7 +12,7 @@ To specify more than one set of KVPs simply pass `--from-literal=` again.
 From a file:
 
 `kubectl create configmap app-config --from-file=config-file.properties`  
-The key will be the file name and the value will be the base64 encoded file
+The key will be the file name and the value will be the base64 encoded file.
 
 ## Declaratively
 
@@ -28,7 +28,7 @@ data:
 
 ## ConfigMap in Pods
 
-Inject a single env var from a config map
+Inject a single env var from a config map:
 ```yaml
 spec:
   containers:

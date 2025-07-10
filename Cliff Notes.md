@@ -24,7 +24,7 @@
 - [`kubelet`](#kubelet)
   - [File locations](#file-locations)
   - [Service Control and Status](#service-control-and-status)
-  - [Troublehhooting `kubelet` Startup](#troublehhooting-kubelet-startup)
+  - [Troubleshooting `kubelet` Startup](#troubleshooting-kubelet-startup)
 - [Expose Pod Information to Containers](#expose-pod-information-to-containers)
 - [Etcd Backup](#etcd-backup)
 - [Services](#services)
@@ -270,7 +270,7 @@ systemctl stop kubelet
 service kubelet stop
 ```
 
-## Troublehhooting `kubelet` Startup
+## Troubleshooting `kubelet` Startup
 
 ```bash
 # check if kubelet is running

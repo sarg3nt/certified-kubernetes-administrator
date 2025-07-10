@@ -12,7 +12,7 @@ alias kn="kubectl config set-context --current --namespace" # kn default
 alias knc="kubectl config view --minify | grep namespace" # Shows the current namespace
 ## nano coonfig
 export KUBE_EDITOR=nano
-# in the file (inccorect commands will be red, correct will turn green)
+# in the file (incorrect commands will be red, correct will turn green)
 echo -e 'set tabsize 2\nset tabstospaces' > ~/.nanorc
 # END OF .bashrc additions
 
@@ -40,7 +40,7 @@ yq eval ".user.addresses[1]" user.yaml # Gets the second item in the array
 yq eval '.user.orders[] | select(. == "43*")' user.yaml # gets order starting with 43
 
 ## etcd restore, stuff in docs is a bit misleading
-# Step 1, move all the static pod yaml out of the manifest folder and wait for the coontainers to stop via crictl
+# Step 1, move all the static pod yaml out of the manifest folder and wait for the containers to stop via crictl
 # Step 2, use etcdctl to restore the snapshot, almost same as saving a snapshot, but with the 
 # location to restore the --data-dir /var/lib/etcd-backup
 ETCDCTL_API=3 etcdctl snapshot restore /tmp/etcd-backup.db \
@@ -113,7 +113,7 @@ my-service.default.svc.cluster.local
 ```bash
 # Sessions
 tmux new -s <name> # Create a new named session
-<ctrl-b> d # dissconnect from session
+<ctrl-b> d # disconnect from session
 tmux ls # View list of sessions
 tmux attach -t <name> 
 tmux kill-session -t <name>

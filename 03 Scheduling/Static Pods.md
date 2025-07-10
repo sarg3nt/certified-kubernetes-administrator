@@ -2,7 +2,7 @@
 
 ## How to tell if a Pod is a Static Pod
 
-1. Static pods will have the the name of the node as the last bit.  Example: mypod-node01
+1. Static pods will have the name of the node as the last bit. Example: mypod-node01
 2. Look at the YAML for the pod, the `ownerReference` --> `kind` will be `node`
 
 ## Static Pod Manifest Location

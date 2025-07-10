@@ -1,14 +1,14 @@
 # CKA Training Notes Scope
 
-These notes where created by David Sargent when I went through the Udemy course [Certified Kubernetes Administrator (CKA) with Practice Tests](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests) by Mumshad Mannambeth.
+These notes were created by David Sargent when I went through the Udemy course [Certified Kubernetes Administrator (CKA) with Practice Tests](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests) by Mumshad Mannambeth.
 
-These notes are not a substitute for taking the above course, although it may look like I took fairly detailed notes there are several sections, espeically early on, that are sparse or non-existent as I knew that materail really well already.
+These notes are not a substitute for taking the above course, although it may look like I took fairly detailed notes there are several sections, especially early on, that are sparse or non-existent as I knew that material really well already.
 
 If you see mistakes or would like to clean things up, feel free to do so and create a PR.
 
 # Cliff Notes
 
-The [Cliff Notes](./Cliff%20Notes) file located at the root of this repo contains my condensed notes of items I needed to memorize for the test so it probably does not contain everything you need to learn.
+The [Cliff Notes](./Cliff%20Notes) file located at the root of this repo contains my condensed notes of items I needed to memorize for the test, so it probably does not contain everything you need to learn.
 
 # Table of Contents
 
@@ -88,7 +88,7 @@ The [Cliff Notes](./Cliff%20Notes) file located at the root of this repo contain
 
 ## 13. Troubleshooting
 - [Application Failures](./13%20Troubleshooting/01%20Application%20Failures)
-- [Control Plane Failures](./13%20Troubleshooting/02%20Control%20Place%20Failurs)
+- [Control Plane Failures](./13%20Troubleshooting/02%20Control%20Plane%20Failures)
 - [Worker Node Failures](./13%20Troubleshooting/03%20Worker%20Node%20Failures)
 - [Network Troubleshooting](./13%20Troubleshooting/04%20Network%20Troubleshooting)
 

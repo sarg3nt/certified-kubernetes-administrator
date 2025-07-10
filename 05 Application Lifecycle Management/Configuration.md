@@ -1,7 +1,7 @@
 # Commands and Arguments
 
-`command` is equivilent to Docker's `ENTRYPOINT`  
-`args` is equivilent to Docker's `CMD`
+`command` is equivalent to Docker's `ENTRYPOINT`  
+`args` is equivalent to Docker's `CMD`
 
 Example:
 
@@ -14,4 +14,4 @@ spec:
       args: 
       - "10"
 ```
-Note: I show the two different ways of passing args as arrays in YAML above.  I prefer the second
+Note: I show the two different ways of passing args as arrays in YAML above. I prefer the second

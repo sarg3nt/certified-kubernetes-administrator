@@ -83,7 +83,7 @@ Private keys should always have key in them, either as the extension or part of 
 | cluster CA | ca.crt | ca.key |
 | kube-api server | apiserver.crt | apiserver.key |
 | etcd server | etcdserver.crt | etcdserver.key |
-| Kubelet server | kubelet.crt | kublet.key |
+| Kubelet server | kubelet.crt | kubelet.key |
 
 ### Clients
 

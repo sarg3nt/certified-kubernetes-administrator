@@ -4,7 +4,7 @@
 
 ```bash
 # The below certs come from here for a typical kubeadm install.
-# You can find them by doing `kubectl describe pod -n kube-system etcd-controlplane` or the equivilent and looking at the command args.
+# You can find them by doing `kubectl describe pod -n kube-system etcd-controlplane` or the equivalent and looking at the command args.
 #  PARAM TO ETCD,  PARAM FROM RUNNING COMMAND ARGS
 # --endpoints   --> --listen-client-urls
 # --cacert      --> --trusted-ca-file
